@@ -4,7 +4,7 @@
 
 import { Room, RemoteVideoTrack, RemoteAudioTrack, RoomEvent, RemoteTrackPublication } from 'livekit-client';
 import { AvatarSession, SessionEventData, ConnectionError, SessionError } from './types';
-import { SESSION_EVENTS, AVATAR_EVENTS, CONNECTION_EVENTS, SESSION_STATUS } from './constants';
+import { SESSION_EVENTS, AVATAR_EVENTS, CONNECTION_EVENTS, SESSION_STATUS, MESSAGE_TYPES } from './constants';
 
 export class AvatarSessionManager {
   private room: Room | null = null;
@@ -63,9 +63,11 @@ export class AvatarSessionManager {
     }
 
     try {
-      // Send message via DataChannel or your preferred method
       await this.room.localParticipant.publishData(
-        new TextEncoder().encode(JSON.stringify({ type: 'message', content: message })),
+        new TextEncoder().encode(JSON.stringify({
+          type: MESSAGE_TYPES.CHAT,
+          text: message
+        })),
         { reliable: true }
       );
     } catch (error) {
@@ -130,7 +132,16 @@ export class AvatarSessionManager {
     this.room.on(RoomEvent.DataReceived, (payload, participant) => {
       try {
         const data = JSON.parse(new TextDecoder().decode(payload));
-        this.emitEvent(AVATAR_EVENTS.MESSAGE, { data, participant });
+
+        if (data.type === MESSAGE_TYPES.RESPONSE) {
+          this.emitEvent(AVATAR_EVENTS.RESPONSE, {
+            text: data.text,
+            timestamp: data.timestamp,
+            participant
+          });
+        } else {
+          this.emitEvent(AVATAR_EVENTS.MESSAGE, { data, participant });
+        }
       } catch (error) {
         console.warn('Failed to parse avatar message:', error);
       }

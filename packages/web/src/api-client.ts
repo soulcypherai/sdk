@@ -7,6 +7,7 @@ import {
   Avatar,
   AvatarSession,
   CreateSessionRequest,
+  CreateAvatarRequest,
   SoulCypherError,
   AuthenticationError,
   RateLimitError
@@ -93,6 +94,13 @@ export class APIClient {
 
   async getAvatar(avatarId: string): Promise<Avatar> {
     return this.request<Avatar>(`/avatars/${avatarId}`);
+  }
+
+  async createAvatar(request: CreateAvatarRequest): Promise<Avatar> {
+    return this.request<Avatar>('/avatars', {
+      method: 'POST',
+      body: JSON.stringify(request),
+    });
   }
 
   // Session operations

@@ -4,8 +4,8 @@
 
 // Avatar Provider Constants (matching platform-backend)
 export const AVATAR_PROVIDERS = {
-  RPM: 'RPM',
-  HEDRA: 'Hedra',
+  RPM: 'rpm',
+  HEDRA: 'hedra',
 } as const;
 
 export type AvatarProvider = typeof AVATAR_PROVIDERS[keyof typeof AVATAR_PROVIDERS];
@@ -22,7 +22,16 @@ export const AVATAR_EVENTS = {
   VIDEO: 'avatar.video',
   AUDIO: 'avatar.audio',
   MESSAGE: 'avatar.message',
+  RESPONSE: 'avatar.response',
 } as const;
+
+// Message Type Constants (for DataChannel)
+export const MESSAGE_TYPES = {
+  CHAT: 'chat',
+  RESPONSE: 'response',
+} as const;
+
+export type MessageType = typeof MESSAGE_TYPES[keyof typeof MESSAGE_TYPES];
 
 // Connection Event Types
 export const CONNECTION_EVENTS = {

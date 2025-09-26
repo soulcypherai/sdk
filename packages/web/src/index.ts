@@ -15,7 +15,8 @@ export {
   ALL_EVENTS,
   SESSION_STATUS,
   SDK_ENVIRONMENTS,
-  ERROR_CODES
+  ERROR_CODES,
+  MESSAGE_TYPES
 } from './constants';
 
 // Export types
@@ -24,6 +25,7 @@ export type {
   Avatar,
   AvatarSession,
   CreateSessionRequest,
+  CreateAvatarRequest,
   SessionEventData,
   UsageMetrics,
   AvatarProvider,

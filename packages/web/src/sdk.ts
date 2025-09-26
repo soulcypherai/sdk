@@ -9,6 +9,7 @@ import {
   Avatar,
   AvatarSession,
   CreateSessionRequest,
+  CreateAvatarRequest,
   AuthenticationError
 } from './types';
 
@@ -37,6 +38,13 @@ export class SoulCypherSDK {
    */
   async getAvatar(avatarId: string): Promise<Avatar> {
     return this.apiClient.getAvatar(avatarId);
+  }
+
+  /**
+   * Create a new avatar
+   */
+  async createAvatar(avatarData: CreateAvatarRequest): Promise<Avatar> {
+    return this.apiClient.createAvatar(avatarData);
   }
 
   /**

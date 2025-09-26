@@ -49,6 +49,6 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/soulcypher-ai/avatar-sdk.git",
-    "directory": "packages/js"
+    "directory": "packages/web"
   }
 }

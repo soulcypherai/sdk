@@ -38,6 +38,13 @@ export interface Avatar {
   isActive: boolean;
   createdAt: string;
   updatedAt?: string;
+  meta?: {
+    source?: string;
+    userId?: string;
+    knowledgeText?: string;
+    links?: string[];
+    [key: string]: any;
+  };
 }
 
 export interface CreateSessionRequest {
@@ -47,6 +54,25 @@ export interface CreateSessionRequest {
     sessionName?: string;
     customContext?: string;
     userAgent?: string;
+  };
+}
+
+export interface CreateAvatarRequest {
+  name: string;
+  description?: string;
+  systemPrompt?: string;
+  personality?: {
+    tone?: string;
+    communicationStyle?: string;
+    responseLength?: string;
+    expertise?: string[];
+  };
+  provider?: AvatarProvider;
+  meta?: {
+    source?: string;
+    userId?: string;
+    knowledgeText?: string;
+    links?: string[];
   };
 }
 
