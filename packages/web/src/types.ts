@@ -27,7 +27,7 @@ export interface SDKConfig {
 
 export interface Avatar {
   id: string;
-  slug?: string;
+  slug: string;
   name: string;
   description?: string;
   category?: string;
@@ -85,7 +85,7 @@ export interface AvatarSession {
   liveKitUrl: string;
   avatar: {
     id: string;
-    slug?: string;
+    slug: string;
     name: string;
     systemPrompt?: string;
     voiceId?: string;
