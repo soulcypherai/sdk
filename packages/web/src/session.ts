@@ -2,14 +2,31 @@
  * Avatar Session Management with LiveKit Integration
  */
 
-import { Room, RemoteVideoTrack, RemoteAudioTrack, RoomEvent, RemoteTrackPublication } from 'livekit-client';
-import { AvatarSession, SessionEventData, ConnectionError, SessionError } from './types';
-import { SESSION_EVENTS, AVATAR_EVENTS, CONNECTION_EVENTS, SESSION_STATUS, MESSAGE_TYPES } from './constants';
+import {
+  Room,
+  RemoteVideoTrack,
+  RemoteAudioTrack,
+  RoomEvent,
+  RemoteTrackPublication,
+} from "livekit-client";
+import {
+  AvatarSession,
+  SessionEventData,
+  ConnectionError,
+  SessionError,
+} from "./types";
+import {
+  SESSION_EVENTS,
+  AVATAR_EVENTS,
+  CONNECTION_EVENTS,
+  SESSION_STATUS,
+  MESSAGE_TYPES,
+} from "./constants";
 
 export class AvatarSessionManager {
-  private room: Room | null = null;
-  private session: AvatarSession;
-  private eventHandlers: Map<string, Function[]> = new Map();
+  room: Room | null = null;
+  session: AvatarSession;
+  eventHandlers: Map<string, Function[]> = new Map();
 
   constructor(session: AvatarSession) {
     this.session = session;
@@ -18,16 +35,22 @@ export class AvatarSessionManager {
   /**
    * Connect to the avatar session using LiveKit
    */
-  async connect(videoElement?: HTMLVideoElement, audioElement?: HTMLAudioElement): Promise<void> {
+  async connect(
+    videoElement?: HTMLVideoElement,
+    audioElement?: HTMLAudioElement
+  ): Promise<void> {
     if (!this.session.liveKitToken || !this.session.liveKitUrl) {
-      throw new ConnectionError('LiveKit connection details not available');
+      throw new ConnectionError("LiveKit connection details not available");
     }
 
     try {
       this.room = new Room();
       this.setupRoomEventHandlers();
 
-      await this.room.connect(this.session.liveKitUrl, this.session.liveKitToken);
+      await this.room.connect(
+        this.session.liveKitUrl,
+        this.session.liveKitToken
+      );
 
       // Handle media elements
       if (videoElement || audioElement) {
@@ -37,7 +60,9 @@ export class AvatarSessionManager {
       this.emitEvent(SESSION_EVENTS.STARTED, { session: this.session });
     } catch (error) {
       throw new ConnectionError(
-        `Failed to connect to LiveKit: ${error instanceof Error ? error.message : 'Unknown error'}`
+        `Failed to connect to LiveKit: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
       );
     }
   }
@@ -59,20 +84,24 @@ export class AvatarSessionManager {
    */
   async sendMessage(message: string): Promise<void> {
     if (!this.room) {
-      throw new SessionError('Not connected to session');
+      throw new SessionError("Not connected to session");
     }
 
     try {
       await this.room.localParticipant.publishData(
-        new TextEncoder().encode(JSON.stringify({
-          type: MESSAGE_TYPES.CHAT,
-          text: message
-        })),
+        new TextEncoder().encode(
+          JSON.stringify({
+            type: MESSAGE_TYPES.CHAT,
+            text: message,
+          })
+        ),
         { reliable: true }
       );
     } catch (error) {
       throw new SessionError(
-        `Failed to send message: ${error instanceof Error ? error.message : 'Unknown error'}`
+        `Failed to send message: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
       );
     }
   }
@@ -80,18 +109,18 @@ export class AvatarSessionManager {
   /**
    * Get current session status
    */
-  getStatus(): 'connected' | 'connecting' | 'disconnected' | 'error' {
-    if (!this.room) return 'disconnected';
+  getStatus(): "connected" | "connecting" | "disconnected" | "error" {
+    if (!this.room) return "disconnected";
 
     switch (this.room.state) {
-      case 'connected':
-        return 'connected';
-      case 'connecting':
-        return 'connecting';
-      case 'disconnected':
-        return 'disconnected';
+      case "connected":
+        return "connected";
+      case "connecting":
+        return "connecting";
+      case "disconnected":
+        return "disconnected";
       default:
-        return 'error';
+        return "error";
     }
   }
 
@@ -121,13 +150,16 @@ export class AvatarSessionManager {
   private setupRoomEventHandlers(): void {
     if (!this.room) return;
 
-    this.room.on(RoomEvent.TrackSubscribed, (track, publication, participant) => {
-      if (track.kind === 'video') {
-        this.emitEvent(AVATAR_EVENTS.VIDEO, { track, participant });
-      } else if (track.kind === 'audio') {
-        this.emitEvent(AVATAR_EVENTS.AUDIO, { track, participant });
+    this.room.on(
+      RoomEvent.TrackSubscribed,
+      (track, publication, participant) => {
+        if (track.kind === "video") {
+          this.emitEvent(AVATAR_EVENTS.VIDEO, { track, participant });
+        } else if (track.kind === "audio") {
+          this.emitEvent(AVATAR_EVENTS.AUDIO, { track, participant });
+        }
       }
-    });
+    );
 
     this.room.on(RoomEvent.DataReceived, (payload, participant) => {
       try {
@@ -137,13 +169,13 @@ export class AvatarSessionManager {
           this.emitEvent(AVATAR_EVENTS.RESPONSE, {
             text: data.text,
             timestamp: data.timestamp,
-            participant
+            participant,
           });
         } else {
           this.emitEvent(AVATAR_EVENTS.MESSAGE, { data, participant });
         }
       } catch (error) {
-        console.warn('Failed to parse avatar message:', error);
+        console.warn("Failed to parse avatar message:", error);
       }
     });
 
@@ -156,16 +188,22 @@ export class AvatarSessionManager {
     });
   }
 
-  private setupMediaElements(videoElement?: HTMLVideoElement, audioElement?: HTMLAudioElement): void {
+  private setupMediaElements(
+    videoElement?: HTMLVideoElement,
+    audioElement?: HTMLAudioElement
+  ): void {
     if (!this.room) return;
 
-    this.room.on(RoomEvent.TrackSubscribed, (track, publication, participant) => {
-      if (track instanceof RemoteVideoTrack && videoElement) {
-        track.attach(videoElement);
-      } else if (track instanceof RemoteAudioTrack && audioElement) {
-        track.attach(audioElement);
+    this.room.on(
+      RoomEvent.TrackSubscribed,
+      (track, publication, participant) => {
+        if (track instanceof RemoteVideoTrack && videoElement) {
+          track.attach(videoElement);
+        } else if (track instanceof RemoteAudioTrack && audioElement) {
+          track.attach(audioElement);
+        }
       }
-    });
+    );
 
     this.room.on(RoomEvent.TrackUnsubscribed, (track) => {
       track.detach();
@@ -182,11 +220,11 @@ export class AvatarSessionManager {
         data,
       };
 
-      handlers.forEach(handler => {
+      handlers.forEach((handler) => {
         try {
           handler(eventData);
         } catch (error) {
-          console.error('Error in event handler:', error);
+          console.error("Error in event handler:", error);
         }
       });
     }
