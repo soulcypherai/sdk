@@ -91,7 +91,7 @@ export class AvatarSessionManager {
       await this.room.localParticipant.publishData(
         new TextEncoder().encode(
           JSON.stringify({
-            type: MESSAGE_TYPES.CHAT,
+            type: MESSAGE_TYPES.INPUT,
             text: message,
           })
         ),

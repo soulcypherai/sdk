@@ -30,6 +30,7 @@ export const AVATAR_EVENTS = {
 // Message Type Constants (for DataChannel)
 export const MESSAGE_TYPES = {
   STATUS: "status",
+  INPUT: "input",
   RESPONSE: "response",
   ERROR: "error",
 } as const;
