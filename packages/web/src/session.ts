@@ -165,14 +165,22 @@ export class AvatarSessionManager {
       try {
         const data = JSON.parse(new TextDecoder().decode(payload));
 
-        if (data.type === MESSAGE_TYPES.RESPONSE) {
-          this.emitEvent(AVATAR_EVENTS.RESPONSE, {
+        if (data.type === MESSAGE_TYPES.STATUS) {
+          this.emitEvent(AVATAR_EVENTS.STATUS, {
+            status: data.status,
             text: data.text,
-            timestamp: data.timestamp,
             participant,
           });
-        } else {
-          this.emitEvent(AVATAR_EVENTS.MESSAGE, { data, participant });
+        } else if (data.type === MESSAGE_TYPES.RESPONSE) {
+          this.emitEvent(AVATAR_EVENTS.RESPONSE, {
+            text: data.text,
+            participant,
+          });
+        } else if (data.type === MESSAGE_TYPES.ERROR) {
+          this.emitEvent(AVATAR_EVENTS.ERROR, {
+            text: data.text,
+            participant,
+          });
         }
       } catch (error) {
         console.warn("Failed to parse avatar message:", error);
