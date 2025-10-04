@@ -35,10 +35,7 @@ export class AvatarSessionManager {
   /**
    * Connect to the avatar session using LiveKit
    */
-  async connect(
-    videoElement?: HTMLVideoElement,
-    audioElement?: HTMLAudioElement
-  ): Promise<void> {
+  async connect(): Promise<void> {
     if (!this.session.liveKitToken || !this.session.liveKitUrl) {
       throw new ConnectionError("LiveKit connection details not available");
     }
@@ -51,11 +48,6 @@ export class AvatarSessionManager {
         this.session.liveKitUrl,
         this.session.liveKitToken
       );
-
-      // Handle media elements
-      if (videoElement || audioElement) {
-        this.setupMediaElements(videoElement, audioElement);
-      }
 
       this.emitEvent(SESSION_EVENTS.STARTED, { session: this.session });
     } catch (error) {
@@ -171,6 +163,11 @@ export class AvatarSessionManager {
             text: data.text,
             participant,
           });
+        } else if (data.type === MESSAGE_TYPES.INPUT) {
+          this.emitEvent(AVATAR_EVENTS.INPUT, {
+            text: data.text,
+            participant,
+          });
         } else if (data.type === MESSAGE_TYPES.RESPONSE) {
           this.emitEvent(AVATAR_EVENTS.RESPONSE, {
             text: data.text,
@@ -193,28 +190,6 @@ export class AvatarSessionManager {
 
     this.room.on(RoomEvent.ConnectionQualityChanged, (quality, participant) => {
       this.emitEvent(CONNECTION_EVENTS.QUALITY, { quality, participant });
-    });
-  }
-
-  private setupMediaElements(
-    videoElement?: HTMLVideoElement,
-    audioElement?: HTMLAudioElement
-  ): void {
-    if (!this.room) return;
-
-    this.room.on(
-      RoomEvent.TrackSubscribed,
-      (track, publication, participant) => {
-        if (track instanceof RemoteVideoTrack && videoElement) {
-          track.attach(videoElement);
-        } else if (track instanceof RemoteAudioTrack && audioElement) {
-          track.attach(audioElement);
-        }
-      }
-    );
-
-    this.room.on(RoomEvent.TrackUnsubscribed, (track) => {
-      track.detach();
     });
   }
 

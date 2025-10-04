@@ -23,6 +23,7 @@ export const AVATAR_EVENTS = {
   VIDEO: "avatar.video",
   AUDIO: "avatar.audio",
   STATUS: "avatar.status",
+  INPUT: "avatar.input",
   RESPONSE: "avatar.response",
   ERROR: "avatar.error",
 } as const;
