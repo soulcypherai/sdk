@@ -1,7 +1,7 @@
 {
-  "name": "@soulcypher/avatar-sdk",
-  "version": "0.1.0",
-  "description": "Official JavaScript SDK for SoulCypher Avatar Platform",
+  "name": "@soulcypher/twin-sdk",
+  "version": "0.1.1",
+  "description": "Official JavaScript SDK for SoulCypher Twin OS",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "module": "dist/index.esm.js",
@@ -36,7 +36,7 @@
     "typescript": ">=4.0.0"
   },
   "keywords": [
-    "avatar",
+    "twin",
     "ai",
     "video-chat",
     "sdk",
@@ -48,7 +48,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/soulcypher-ai/avatar-sdk.git",
+    "url": "https://github.com/soulcypherai/sdk.git",
     "directory": "packages/web"
   }
 }
