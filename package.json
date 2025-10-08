@@ -6,8 +6,8 @@
   "types": "packages/web/dist/index.d.ts",
   "scripts": {
     "build": "npm run build:web && npm run build:rn",
-    "build:js": "cd packages/web && npm run build",
-    "build:rn": "cd packages/react-native && npm run build",
+    "build:web": "cd packages/web && npm run build",
+    "build:rn": "echo 'React Native package not implemented yet'",
     "test": "jest",
     "lint": "eslint packages/*/src/**/*.ts",
     "prepublishOnly": "npm run build"
