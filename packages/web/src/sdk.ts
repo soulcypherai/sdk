@@ -2,16 +2,16 @@
  * Main SoulCypher Avatar SDK Class
  */
 
-import { APIClient } from './api-client';
-import { AvatarSessionManager } from './session';
+import { APIClient } from "./api-client";
+import { AvatarSessionManager } from "./session";
 import {
   SDKConfig,
   Avatar,
   AvatarSession,
   CreateSessionRequest,
   CreateAvatarRequest,
-  AuthenticationError
-} from './types';
+  AuthenticationError,
+} from "./types";
 
 export class SoulCypherSDK {
   private apiClient: APIClient;
@@ -19,7 +19,7 @@ export class SoulCypherSDK {
 
   constructor(config: SDKConfig) {
     if (!config.apiKey) {
-      throw new AuthenticationError('API key is required');
+      throw new AuthenticationError("API key is required");
     }
 
     this.apiClient = new APIClient(config);
@@ -50,7 +50,9 @@ export class SoulCypherSDK {
   /**
    * Create a new avatar session
    */
-  async createSession(request: CreateSessionRequest): Promise<AvatarSessionManager> {
+  async createSession(
+    request: CreateSessionRequest
+  ): Promise<AvatarSessionManager> {
     const session = await this.apiClient.createSession(request);
     const sessionManager = new AvatarSessionManager(session);
 
@@ -110,8 +112,8 @@ export class SoulCypherSDK {
    * Clean up all sessions and disconnect
    */
   async cleanup(): Promise<void> {
-    const disconnectPromises = Array.from(this.sessions.values()).map(session =>
-      session.disconnect()
+    const disconnectPromises = Array.from(this.sessions.values()).map(
+      (session) => session.disconnect()
     );
 
     await Promise.all(disconnectPromises);

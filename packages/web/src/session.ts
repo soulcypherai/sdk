@@ -166,6 +166,7 @@ export class AvatarSessionManager {
         } else if (data.type === MESSAGE_TYPES.INPUT) {
           this.emitEvent(AVATAR_EVENTS.INPUT, {
             text: data.text,
+            inputType: data.input_type,
             participant,
           });
         } else if (data.type === MESSAGE_TYPES.RESPONSE) {

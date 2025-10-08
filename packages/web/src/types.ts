@@ -7,8 +7,8 @@ import type {
   SessionEventType,
   SessionStatus,
   SDKEnvironment,
-  ErrorCode
-} from './constants';
+  ErrorCode,
+} from "./constants";
 
 // Re-export the types
 export type {
@@ -16,7 +16,7 @@ export type {
   SessionEventType,
   SessionStatus,
   SDKEnvironment,
-  ErrorCode
+  ErrorCode,
 };
 
 export interface SDKConfig {
@@ -34,6 +34,7 @@ export interface Avatar {
   imageUrl?: string;
   previewVideoUrl?: string;
   provider: AvatarProvider;
+  voiceId?: string; // ElevenLabs voice ID
   costPerMinute: number;
   isActive: boolean;
   createdAt: string;
@@ -45,6 +46,11 @@ export interface Avatar {
     links?: string[];
     [key: string]: any;
   };
+  // Provider-specific configurations
+  hedraConfig?: {
+    id: string;
+  };
+  modelUri?: string; // For RPM avatars
 }
 
 export interface CreateSessionRequest {
@@ -68,12 +74,16 @@ export interface CreateAvatarRequest {
     expertise?: string[];
   };
   provider?: AvatarProvider;
+  rpmModelUrl?: string; // Ready Player Me avatar model URL for RPM provider
   meta?: {
     source?: string;
     userId?: string;
     knowledgeText?: string;
     links?: string[];
   };
+  // File uploads
+  image?: File | Blob; // Required for Hedra provider
+  audioFiles: File[] | Blob[]; // Required for all providers
 }
 
 export interface AvatarSession {
@@ -113,36 +123,40 @@ export interface UsageMetrics {
 
 // Error types
 export class SoulCypherError extends Error {
-  constructor(message: string, public code?: ErrorCode, public statusCode?: number) {
+  constructor(
+    message: string,
+    public code?: ErrorCode,
+    public statusCode?: number
+  ) {
     super(message);
-    this.name = 'SoulCypherError';
+    this.name = "SoulCypherError";
   }
 }
 
 export class AuthenticationError extends SoulCypherError {
-  constructor(message: string = 'Invalid or expired API key') {
-    super(message, 'AUTHENTICATION_ERROR', 401);
-    this.name = 'AuthenticationError';
+  constructor(message: string = "Invalid or expired API key") {
+    super(message, "AUTHENTICATION_ERROR", 401);
+    this.name = "AuthenticationError";
   }
 }
 
 export class RateLimitError extends SoulCypherError {
-  constructor(message: string = 'Rate limit exceeded') {
-    super(message, 'RATE_LIMIT_ERROR', 429);
-    this.name = 'RateLimitError';
+  constructor(message: string = "Rate limit exceeded") {
+    super(message, "RATE_LIMIT_ERROR", 429);
+    this.name = "RateLimitError";
   }
 }
 
 export class SessionError extends SoulCypherError {
   constructor(message: string, code?: ErrorCode) {
-    super(message, code || 'SESSION_ERROR');
-    this.name = 'SessionError';
+    super(message, code || "SESSION_ERROR");
+    this.name = "SessionError";
   }
 }
 
 export class ConnectionError extends SoulCypherError {
-  constructor(message: string = 'Failed to connect to avatar session') {
-    super(message, 'CONNECTION_ERROR');
-    this.name = 'ConnectionError';
+  constructor(message: string = "Failed to connect to avatar session") {
+    super(message, "CONNECTION_ERROR");
+    this.name = "ConnectionError";
   }
 }
