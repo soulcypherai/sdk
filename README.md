@@ -11,11 +11,8 @@ npm install @soulcypher/twin-sdk
 ## Quick Start
 
 ```typescript
-import {
-  SoulCypherSDK,
-  AvatarSessionManager,
-  AVATAR_PROVIDERS,
-} from "@soulcypher/twin-sdk";
+
+import { SoulCypherSDK, AvatarSessionManager, AVATAR_PROVIDERS } from '@soulcypher/twin-sdk';
 
 const sdk = new SoulCypherSDK({
   apiKey: "your-api-key",

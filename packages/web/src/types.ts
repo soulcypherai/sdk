@@ -37,6 +37,7 @@ export interface Avatar {
   voiceId?: string; // ElevenLabs voice ID
   costPerMinute: number;
   isActive: boolean;
+  marketplace?: boolean;
   createdAt: string;
   updatedAt?: string;
   meta?: {

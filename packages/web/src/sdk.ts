@@ -48,6 +48,14 @@ export class SoulCypherSDK {
   }
 
   /**
+   * Set avatar marketplace visibility
+   * Only the creator project can change visibility
+   */
+  async setAvatarVisibility(avatarId: string, marketplace: boolean): Promise<{ id: string; name: string; marketplace: boolean }> {
+    return this.apiClient.setAvatarVisibility(avatarId, marketplace);
+  }
+
+  /**
    * Create a new avatar session
    */
   async createSession(

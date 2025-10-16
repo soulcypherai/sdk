@@ -214,6 +214,13 @@ export class APIClient {
     });
   }
 
+  async setAvatarVisibility(avatarId: string, marketplace: boolean): Promise<{ id: string; name: string; marketplace: boolean }> {
+    return this.request<{ id: string; name: string; marketplace: boolean }>(`/avatars/${avatarId}/visibility`, {
+      method: 'POST',
+      body: JSON.stringify({ marketplace }),
+    });
+  }
+
   // Session operations
   async createSession(request: CreateSessionRequest): Promise<AvatarSession> {
     return this.request<AvatarSession>("/sessions/create", {
