@@ -132,8 +132,25 @@ export class APIClient {
   }
 
   // Avatar operations
-  async getAvatars(): Promise<{ avatars: Avatar[]; pagination?: any }> {
-    return this.request<{ avatars: Avatar[]; pagination?: any }>("/avatars");
+  async getAvatars(options?: { limit?: number; offset?: number; category?: string; search?: string }): Promise<{ avatars: Avatar[]; pagination?: any }> {
+    const params = new URLSearchParams();
+
+    // Default to 100 (max) to fetch all avatars unless specified
+    const limit = options?.limit ?? 100;
+    const offset = options?.offset ?? 0;
+
+    params.append('limit', limit.toString());
+    params.append('offset', offset.toString());
+
+    if (options?.category) {
+      params.append('category', options.category);
+    }
+    if (options?.search) {
+      params.append('search', options.search);
+    }
+
+    const queryString = params.toString();
+    return this.request<{ avatars: Avatar[]; pagination?: any }>(`/avatars${queryString ? `?${queryString}` : ''}`);
   }
 
   async getAvatar(avatarId: string): Promise<Avatar> {

@@ -28,8 +28,8 @@ export class SoulCypherSDK {
   /**
    * Get list of available avatars
    */
-  async getAvatars(): Promise<Avatar[]> {
-    const response = await this.apiClient.getAvatars();
+  async getAvatars(options?: { limit?: number; offset?: number; category?: string; search?: string }): Promise<Avatar[]> {
+    const response = await this.apiClient.getAvatars(options);
     return response.avatars;
   }
 

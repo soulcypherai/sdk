@@ -38,6 +38,7 @@ export interface Avatar {
   costPerMinute: number;
   isActive: boolean;
   marketplace?: boolean;
+  isOwned?: boolean; // Whether the requesting project owns this avatar
   createdAt: string;
   updatedAt?: string;
   meta?: {
